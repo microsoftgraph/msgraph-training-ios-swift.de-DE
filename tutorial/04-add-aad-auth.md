@@ -1,33 +1,33 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die Authentifizierung mit Azure AD zu unterstützen. Dies ist erforderlich, um das erforderliche OAuth-Zugriffstoken zum Aufrufen von Microsoft Graph zu erhalten. Hierzu integrieren Sie die [Microsoft-Authentifizierungsbibliothek (MSAL) für IOS](https://github.com/AzureAD/microsoft-authentication-library-for-objc) in die Anwendung.
+In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die Authentifizierung mit Azure AD zu unterstützen. Dies ist erforderlich, um das erforderliche OAuth-Zugriffstoken zum Aufrufen von Microsoft Graph abzurufen. Dazu integrieren Sie die [Microsoft Authentication Library (MSAL) für iOS](https://github.com/AzureAD/microsoft-authentication-library-for-objc) in die Anwendung.
 
-1. Erstellen Sie eine neue **Eigenschaftenlisten** Datei im **GraphTutorial** -Projekt mit dem Namen **AuthSettings. plist**.
-1. Fügen Sie die folgenden Elemente zur Datei im **Stamm** Wörterbuch hinzu.
+1. Erstellen Sie eine neue **Eigenschaftslistendatei** im **GraphTutorial-Projekt** mit dem Namen **AuthSettings.plist**.
+1. Fügen Sie der Datei im Stammverzeichnis die folgenden **Elemente** hinzu.
 
     | Key | Typ | Wert |
     |-----|------|-------|
     | `AppId` | Zeichenfolge | Die Anwendungs-ID aus dem Azure-Portal |
-    | `GraphScopes` | Array | Zwei Zeichenfolgenwerte `User.Read` : und`Calendars.Read` |
+    | `GraphScopes` | Array | Drei Zeichenfolgenwerte: `User.Read` `MailboxSettings.Read` , und `Calendars.ReadWrite` |
 
-    ![Ein Screenshot der Datei AuthSettings. plist in Xcode](./images/auth-settings.png)
+    ![Screenshot der Datei "AuthSettings.plist" in Xcode](images/auth-settings.png)
 
 > [!IMPORTANT]
-> Wenn Sie die Quellcodeverwaltung wie git verwenden, wäre es nun ein guter Zeitpunkt, die Datei **AuthSettings. plist** aus der Quellcodeverwaltung auszuschließen, um unbeabsichtigtes Auslaufen ihrer APP-ID zu vermeiden.
+> Wenn Sie Quellcodeverwaltung wie Git verwenden, wäre es jetzt ein guter Zeitpunkt, die **Datei "AuthSettings.plist"** aus der Quellcodeverwaltung auszuschließen, um versehentlich einen Leck für Ihre App-ID zu vermeiden.
 
 ## <a name="implement-sign-in"></a>Implementieren der Anmeldung
 
-In diesem Abschnitt Konfigurieren Sie das Projekt für MSAL, erstellen eine Authentifizierungs-Manager-Klasse und aktualisieren die APP, um sich anzumelden und abzumelden.
+In diesem Abschnitt konfigurieren Sie das Projekt für MSAL, erstellen eine Authentifizierungs-Manager-Klasse und aktualisieren die App so, dass sie sich anmeldet und abmeldet.
 
 ### <a name="configure-project-for-msal"></a>Konfigurieren des Projekts für MSAL
 
-1. Fügen Sie der Projektfunktion eine neue Schlüsselbund Gruppe hinzu.
-    1. Wählen Sie das **GraphTutorial** -Projekt aus, und **Signieren Sie & Funktionen**.
-    1. Wählen Sie **+-Funktion**aus, und doppelklicken Sie dann auf **Schlüsselbund Freigabe**.
-    1. Fügen Sie eine Schlüsselbund Gruppe mit `com.microsoft.adalcache`dem Wert hinzu.
+1. Fügen Sie den Projektfunktionen eine neue Schlüsselbundgruppe hinzu.
+    1. Wählen Sie **das GraphTutorial-Projekt** aus, und signieren **& Funktionen.**
+    1. Wählen **Sie +Funktion** aus, und doppelklicken Sie dann **auf Schlüsselbundfreigabe.**
+    1. Fügen Sie eine Schlüsselbundgruppe mit dem Wert `com.microsoft.adalcache` hinzu.
 
-1. Steuerelement klicken Sie auf **Info. plist** , und wählen Sie dann **Öffnen als**, dann **Quellcode**aus.
-1. Fügen Sie das folgende innerhalb `<dict>` des-Elements hinzu.
+1. Steuerelement klicken **Sie auf "Info.plist",** und wählen **Sie "Öffnen als"** und dann **"Quellcode" aus.**
+1. Fügen Sie Folgendes innerhalb des Elements `<dict>` hinzu.
 
     ```xml
     <key>CFBundleURLTypes</key>
@@ -46,7 +46,7 @@ In diesem Abschnitt Konfigurieren Sie das Projekt für MSAL, erstellen eine Auth
     </array>
     ```
 
-1. Öffnen Sie **AppDelegate. Swift** , und fügen Sie die folgende Importanweisung am Anfang der Datei hinzu.
+1. Öffnen **Sie "AppDelegate.swift",** und fügen Sie die folgende Import-Anweisung am Anfang der Datei hinzu.
 
     ```Swift
     import MSAL
@@ -56,33 +56,33 @@ In diesem Abschnitt Konfigurieren Sie das Projekt für MSAL, erstellen eine Auth
 
     :::code language="swift" source="../demo/GraphTutorial/GraphTutorial/AppDelegate.swift" id="HandleMsalResponseSnippet":::
 
-### <a name="create-authentication-manager"></a>Erstellen des Authentifizierungs-Managers
+### <a name="create-authentication-manager"></a>Erstellen eines Authentifizierungs-Managers
 
-1. Erstellen Sie eine neue **SWIFT-Datei** im **GraphTutorial** -Projekt mit dem Namen **AuthenticationManager. Swift**. Fügen Sie den folgenden Code in die Datei ein:
+1. Erstellen Sie eine neue **Swift-Datei** im **GraphTutorial-Projekt** mit dem Namen **AuthenticationManager.swift**. Fügen Sie den folgenden Code in die Datei ein:
 
     :::code language="swift" source="../demo/GraphTutorial/GraphTutorial/AuthenticationManager.swift" id="AuthManagerSnippet":::
 
-### <a name="add-sign-in-and-sign-out"></a>Hinzufügen von Anmelde-und Abmeldungen
+### <a name="add-sign-in-and-sign-out"></a>Hinzufügen von Anmeldung und Abmelden
 
-1. Öffnen Sie **SignInViewController. Swift** , und ersetzen Sie den Inhalt durch den folgenden Code.
+1. Öffnen **Sie "SignInViewController.swift",** und ersetzen Sie den Inhalt durch den folgenden Code.
 
     :::code language="swift" source="../demo/GraphTutorial/GraphTutorial/SignInViewController.swift" id="SignInViewSnippet":::
 
-1. Öffnen Sie **WelcomeViewController. Swift** , und ersetzen `signOut` Sie die vorhandene Funktion durch Folgendes.
+1. Öffnen **Sie WelcomeViewController.swift,** und ersetzen Sie die vorhandene `signOut` Funktion durch Folgendes.
 
     :::code language="swift" source="../demo/GraphTutorial/GraphTutorial/WelcomeViewController.swift" id="SignOutSnippet":::
 
 1. Speichern Sie Ihre Änderungen, und starten Sie die Anwendung im Simulator neu.
 
-Wenn Sie sich bei der App anmelden, sollten Sie ein Zugriffstoken sehen, das im Ausgabefenster von Xcode angezeigt wird.
+Wenn Sie sich bei der App anmelden, sollte ein Zugriffstoken im Ausgabefenster in Xcode angezeigt werden.
 
-![Screenshot des Ausgabefensters in Xcode mit einem Zugriffstoken](./images/access-token-output.png)
+![Screenshot des Ausgabefensters in Xcode mit einem Zugriffstoken](images/access-token-output.png)
 
 ## <a name="get-user-details"></a>Benutzerdetails abrufen
 
-In diesem Abschnitt erstellen Sie eine Hilfsklasse, die alle Aufrufe von Microsoft Graph enthält, und aktualisieren Sie `WelcomeViewController` , um die neue Klasse zum Abrufen des angemeldeten Benutzers zu verwenden.
+In diesem Abschnitt erstellen Sie eine Hilfsklasse für alle Aufrufe von Microsoft Graph und aktualisieren die Klasse so, dass sie diese neue Klasse verwendet, um den angemeldeten `WelcomeViewController` Benutzer zu erhalten.
 
-1. Erstellen Sie eine neue **SWIFT-Datei** im **GraphTutorial** -Projekt mit dem Namen **graphmanager. Swift**. Fügen Sie den folgenden Code in die Datei ein:
+1. Erstellen Sie eine neue **Swift-Datei** im **GraphTutorial-Projekt** mit dem Namen **GraphManager.swift**. Fügen Sie den folgenden Code in die Datei ein:
 
     ```Swift
     import Foundation
@@ -96,13 +96,17 @@ In diesem Abschnitt erstellen Sie eine Hilfsklasse, die alle Aufrufe von Microso
 
         private let client: MSHTTPClient?
 
+        public var userTimeZone: String
+
         private init() {
             client = MSClientFactory.createHTTPClient(with: AuthenticationManager.instance)
+            userTimeZone = "UTC"
         }
 
         public func getMe(completion: @escaping(MSGraphUser?, Error?) -> Void) {
             // GET /me
-            let meRequest = NSMutableURLRequest(url: URL(string: "\(MSGraphBaseURL)/me")!)
+            let select = "$select=displayName,mail,mailboxSettings,userPrincipalName"
+            let meRequest = NSMutableURLRequest(url: URL(string: "\(MSGraphBaseURL)/me?\(select)")!)
             let meDataTask = MSURLSessionDataTask(request: meRequest, client: self.client, completion: {
                 (data: Data?, response: URLResponse?, graphError: Error?) in
                 guard let meData = data, graphError == nil else {
@@ -125,7 +129,7 @@ In diesem Abschnitt erstellen Sie eine Hilfsklasse, die alle Aufrufe von Microso
     }
     ```
 
-1. Öffnen Sie **WelcomeViewController. Swift** , und fügen `import` Sie die folgende Anweisung am Anfang der Datei hinzu.
+1. Öffnen **Sie WelcomeViewController.swift,** und fügen Sie die folgende `import` Anweisung am Anfang der Datei hinzu.
 
     ```Swift
     import MSGraphClientModels
@@ -137,8 +141,8 @@ In diesem Abschnitt erstellen Sie eine Hilfsklasse, die alle Aufrufe von Microso
     private let spinner = SpinnerViewController()
     ```
 
-1. Ersetzen Sie den `viewDidLoad` vorhandenen durch den folgenden Code.
+1. Ersetzen Sie das vorhandene `viewDidLoad` durch den folgenden Code.
 
     :::code language="swift" source="../demo/GraphTutorial/GraphTutorial/WelcomeViewController.swift" id="ViewDidLoadSnippet":::
 
-Wenn Sie Ihre Änderungen speichern und die APP jetzt neu starten, wird die Benutzeroberfläche nach der Anmeldung mit dem Anzeigenamen und der e-Mail-Adresse des Benutzers aktualisiert.
+Wenn Sie Ihre Änderungen speichern und die App jetzt neu starten, wird die Benutzeroberfläche nach der Anmeldung mit dem Anzeigenamen und der E-Mail-Adresse des Benutzers aktualisiert.
